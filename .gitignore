@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+.npm/
+.pnpm-store/
+
+# Logs
+*.log
+*.err
+*.out
+*.pid
+*.pid.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.local.example
+!.env.*.example
+
+# Build output / caches
+dist/
+build/
+coverage/
+.nyc_output/
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.vercel/
+out/
+.svelte-kit/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# PPTX test files — not committed
+*.pptx
+public/*.pptx
+
+# Generic temp files
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Claude local config/state
+.claude/
+.claude.*
+claude_desktop_config.json
+
+# MCP local config/state
+.mcp/
+.mcp.*
+mcp*.log
+*-mcp*.log
