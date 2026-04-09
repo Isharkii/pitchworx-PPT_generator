@@ -74,7 +74,7 @@ export default function Home() {
           alt="Pitchworx"
           width={150}
           height={150}
-          className="dark:brightness-0 dark:invert transition-all duration-300"
+          className="w-20 md:w-32 h-auto dark:brightness-0 dark:invert transition-all duration-300"
           priority
         />
       </div>
@@ -84,7 +84,7 @@ export default function Home() {
         <ThemeToggle />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center px-4 py-16 md:py-24">
+      <div className="relative z-10 flex flex-col items-center px-4 pt-20 pb-32 md:pt-24 md:pb-16 md:pl-20">
 
         {/* ── Header ── */}
         <motion.div
@@ -93,7 +93,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="mb-12 text-center"
         >
-          <h1 className="text-4xl md:text-5xl text-gray-900 dark:text-white/95 tracking-tight leading-tight mb-3" style={{ fontWeight: 700 }}>
+          <h1 className="text-2xl sm:text-4xl md:text-5xl text-gray-900 dark:text-white/95 tracking-tight leading-tight mb-3" style={{ fontWeight: 700 }}>
             Pitchworx PPT Generator
           </h1>
           <p className="text-gray-400 dark:text-white/35 text-base max-w-md mx-auto leading-relaxed">
