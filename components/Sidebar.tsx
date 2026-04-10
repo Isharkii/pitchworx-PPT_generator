@@ -20,12 +20,7 @@ type PanelId = "new" | "projects" | "media" | "about" | "themes" | null;
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const MOCK_PROJECTS = [
-  { id: 1, title: "Q3 Product Launch Strategy", slides: 10, date: "Apr 8" },
-  { id: 2, title: "Investor Pitch Deck 2025",   slides: 14, date: "Apr 6" },
-  { id: 3, title: "Marketing Campaign Overview", slides: 8, date: "Apr 3" },
-  { id: 4, title: "Team Onboarding Guide",       slides: 12, date: "Mar 29" },
-];
+const MOCK_PROJECTS: { id: number; title: string; slides: number; date: string }[] = [];
 
 const MOCK_THEMES = [
   { id: "minimal", label: "Minimal", from: "#f5f5f5", to: "#e0e0e0", text: "#111" },
@@ -74,23 +69,10 @@ function ProjectsPanel({ onClose }: { onClose: () => void }) {
   return (
     <div className="p-5 space-y-3">
       <PanelHeader title="Projects" onClose={onClose} />
-      <p className="text-xs text-gray-400 dark:text-white/30">Recent presentations</p>
-      <div className="space-y-2">
-        {MOCK_PROJECTS.map((p) => (
-          <div
-            key={p.id}
-            className="group flex items-start gap-3 p-3 rounded-xl cursor-pointer border border-black/[0.06] bg-gray-50 dark:bg-white/[0.03] dark:border-white/[0.05] hover:border-violet-300 dark:hover:border-violet-500/30 transition-all duration-200"
-          >
-            <div className="mt-0.5 flex-shrink-0 h-8 w-8 rounded-lg bg-violet-100 dark:bg-violet-500/15 flex items-center justify-center">
-              <FileText size={14} className="text-violet-600 dark:text-violet-400" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-gray-800 dark:text-white/80 truncate">{p.title}</p>
-              <p className="text-xs text-gray-400 dark:text-white/30 mt-0.5">{p.slides} slides · {p.date}</p>
-            </div>
-            <ExternalLink size={12} className="mt-1 flex-shrink-0 text-gray-300 dark:text-white/20 group-hover:text-violet-500 transition-colors" />
-          </div>
-        ))}
+      <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
+        <FolderOpen size={28} className="text-gray-300 dark:text-white/20" />
+        <p className="text-sm text-gray-400 dark:text-white/30">No projects yet</p>
+        <p className="text-xs text-gray-300 dark:text-white/20">Generate your first presentation to see it here</p>
       </div>
     </div>
   );
