@@ -10,9 +10,18 @@ export const redis =
     maxRetriesPerRequest: 3,
     enableReadyCheck: false,
     lazyConnect: true,
+    // Don't hammer a missing Redis instance — back off quickly
+    retryStrategy: (times: number) => (times > 3 ? null : Math.min(times * 200, 1000)),
   });
 
 if (process.env.NODE_ENV !== "production") globalForRedis.redis = redis;
+
+// CRITICAL: Must attach 'error' listener before any connect attempt.
+// Without it, ioredis emits an unhandled 'error' EventEmitter event
+// which Node.js converts to an uncaught exception → process crashes.
+redis.on("error", (err: Error) => {
+  console.warn("[redis] Connection error (non-fatal):", err.message);
+});
 
 // Attempt connection on startup so misconfiguration is logged immediately
 // rather than silently failing on first cache operation.
