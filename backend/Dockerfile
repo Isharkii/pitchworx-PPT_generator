@@ -1,10 +1,12 @@
 FROM node:20-alpine
 
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
-# Install dependencies
+# Install all dependencies (including devDeps for tsx)
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 # Copy source
 COPY . .
@@ -14,5 +16,5 @@ RUN npx prisma generate
 
 EXPOSE 3001
 
-# Run migrations then start
-CMD ["sh", "-c", "npx prisma migrate deploy && npx tsx src/server.ts"]
+# Use ; so server starts even if migration fails (e.g. DB not yet reachable)
+CMD ["sh", "-c", "npx prisma migrate deploy; npx tsx src/server.ts"]
