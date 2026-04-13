@@ -163,9 +163,10 @@ export default function InputBox({ value, onChange, onSubmit, loading }: InputBo
             whileTap={{ scale: 0.97 }}
             className="
               btn-glow px-5 py-2 rounded-xl text-sm text-white
-              bg-gradient-to-r from-violet-600 to-blue-600
+              bg-gradient-to-r from-blue-500 to-blue-600
+              hover:from-green-500 hover:to-green-600
               disabled:opacity-40 disabled:cursor-not-allowed
-              transition-all duration-200
+              transition-all duration-300
             "
           >
             {loading ? (
