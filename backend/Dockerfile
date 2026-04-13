@@ -14,7 +14,8 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
+ENV PATH="/app/node_modules/.bin:$PATH"
+
 EXPOSE 3001
 
-# Use ; so server starts even if migration fails (e.g. DB not yet reachable)
-CMD ["sh", "-c", "npx prisma migrate deploy; npx tsx src/server.ts"]
+CMD ["sh", "-c", "npx prisma migrate deploy; tsx src/server.ts"]
