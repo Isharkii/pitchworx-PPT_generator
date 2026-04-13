@@ -1,5 +1,7 @@
-# ── TESTING ONLY — Railway deployment config ──────────────────────────────────
-# Remove this file when switching to VPS. See deploy/vps/ for production config.
+# ── Railway deployment config (TESTING ONLY) ──────────────────────────────────
+# This is used for Railway-based testing deployments.
+# To remove testing infrastructure, delete this entire deploy/testing/ folder
+# and remove backend/railway.toml.
 
 [build]
 builder = "NIXPACKS"

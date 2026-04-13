@@ -1,0 +1,27 @@
+# ── Local development services (TESTING ONLY) ─────────────────────────────────
+# Spins up Postgres + Redis locally so you can run the backend with npm run dev.
+# Usage: docker compose -f deploy/testing/docker-compose.dev.yml up -d
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pitchworx
+    ports:
+      - "5432:5432"
+    volumes:
+      - dev_postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - dev_redis:/data
+
+volumes:
+  dev_postgres:
+  dev_redis:
