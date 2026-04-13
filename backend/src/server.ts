@@ -1,5 +1,4 @@
 import Fastify from "fastify";
-import cors from "@fastify/cors";
 import { userRoutes } from "./routes/users";
 import { projectRoutes } from "./routes/projects";
 import { themeRoutes } from "./routes/themes";
@@ -8,9 +7,17 @@ import { generateRoutes } from "./routes/generate";
 async function main() {
   const app = Fastify({ logger: true });
 
-  await app.register(cors, {
-    origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+  // Manual CORS — avoids @fastify/cors which is ESM-only in v9 and
+  // cannot be require()'d from a CJS bundle.
+  const allowedOrigin = process.env.FRONTEND_URL ?? "http://localhost:3000";
+  app.addHook("onRequest", async (req, reply) => {
+    reply.header("Access-Control-Allow-Origin", allowedOrigin);
+    reply.header("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS");
+    reply.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+    reply.header("Access-Control-Allow-Credentials", "true");
+    if (req.method === "OPTIONS") {
+      return reply.status(204).send();
+    }
   });
 
   await app.register(userRoutes,    { prefix: "/api" });
