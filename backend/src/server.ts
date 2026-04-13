@@ -5,6 +5,12 @@ import { projectRoutes } from "./routes/projects";
 import { themeRoutes } from "./routes/themes";
 import { generateRoutes } from "./routes/generate";
 
+console.log("[startup] NODE_ENV:", process.env.NODE_ENV);
+console.log("[startup] PORT:", process.env.PORT);
+console.log("[startup] DATABASE_URL set:", !!process.env.DATABASE_URL);
+console.log("[startup] REDIS_URL set:", !!process.env.REDIS_URL);
+console.log("[startup] GAMMA_API_KEY set:", !!process.env.GAMMA_API_KEY);
+
 const app = Fastify({
   logger: {
     transport:

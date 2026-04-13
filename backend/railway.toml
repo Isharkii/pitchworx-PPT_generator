@@ -7,8 +7,8 @@ buildCommand = "npm install --prefer-offline && npx prisma generate"
 
 [deploy]
 startCommand = "npx prisma migrate deploy; npx tsx src/server.ts"
-healthcheckPath = "/health"
-healthcheckTimeout = 60
+# healthcheckPath = "/health"   # temporarily disabled for debugging
+# healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
