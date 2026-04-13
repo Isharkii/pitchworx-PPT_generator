@@ -1,0 +1,14 @@
+# Root-level Railway config — points to the backend service directory.
+# In the Railway dashboard, set the Root Directory to "backend" for the
+# backend service, and leave it as "/" for the frontend (if hosting there).
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm ci && npx prisma generate && npx prisma migrate deploy"
+
+[deploy]
+startCommand = "node --import tsx/esm src/server.ts"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
