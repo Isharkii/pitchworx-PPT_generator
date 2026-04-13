@@ -1,9 +1,9 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm ci && npx prisma generate && npx prisma migrate deploy"
+buildCommand = "npm ci && npx prisma generate"
 
 [deploy]
-startCommand = "node --import tsx/esm src/server.ts"
+startCommand = "npx prisma migrate deploy && node --import tsx/esm src/server.ts"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
