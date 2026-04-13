@@ -1,5 +1,9 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import { userRoutes } from "./routes/users";
+import { projectRoutes } from "./routes/projects";
+import { themeRoutes } from "./routes/themes";
+import { generateRoutes } from "./routes/generate";
 
 const app = Fastify({ logger: true });
 
@@ -8,33 +12,19 @@ await app.register(cors, {
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
 });
 
+await app.register(userRoutes,    { prefix: "/api" });
+await app.register(projectRoutes, { prefix: "/api" });
+await app.register(themeRoutes,   { prefix: "/api" });
+await app.register(generateRoutes,{ prefix: "/api" });
+
 app.get("/health", async () => ({ status: "ok", ts: new Date().toISOString() }));
-
-// ── Load routes dynamically so a single import failure is logged, not fatal ───
-const routeModules = [
-  { name: "users",    path: "./routes/users",    prefix: "/api" },
-  { name: "projects", path: "./routes/projects", prefix: "/api" },
-  { name: "themes",   path: "./routes/themes",   prefix: "/api" },
-  { name: "generate", path: "./routes/generate", prefix: "/api" },
-];
-
-for (const { name, path, prefix } of routeModules) {
-  try {
-    const mod = await import(path);
-    const routeFn = Object.values(mod)[0] as (app: unknown) => Promise<void>;
-    await app.register(routeFn, { prefix });
-    console.log(`[boot] loaded route: ${name}`);
-  } catch (err) {
-    console.error(`[boot] FAILED to load route "${name}":`, err);
-  }
-}
 
 const PORT = Number(process.env.PORT ?? 3001);
 
 try {
   await app.listen({ port: PORT, host: "0.0.0.0" });
-  console.log(`[boot] listening on port ${PORT}`);
+  console.log(`Backend running on http://0.0.0.0:${PORT}`);
 } catch (err) {
-  console.error("[boot] failed to start:", err);
+  console.error("Server failed to start:", err);
   process.exit(1);
 }

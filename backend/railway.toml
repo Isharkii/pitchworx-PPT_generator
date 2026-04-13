@@ -6,7 +6,7 @@ builder = "NIXPACKS"
 buildCommand = "npm install --prefer-offline && npx prisma generate"
 
 [deploy]
-startCommand = "npx prisma migrate deploy; ./node_modules/.bin/tsx src/server.ts"
+startCommand = "npx prisma migrate deploy && node dist/server.mjs"
 # healthcheckPath = "/health"   # temporarily disabled for debugging
 # healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"

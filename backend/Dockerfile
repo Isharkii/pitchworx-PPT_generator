@@ -4,18 +4,23 @@ RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Install all dependencies (including devDeps for tsx)
 COPY package*.json ./
 RUN npm ci
 
-# Copy source
 COPY . .
 
 # Generate Prisma client
 RUN npx prisma generate
 
-ENV PATH="/app/node_modules/.bin:$PATH"
+# Compile TypeScript to JS with esbuild (no tsx at runtime)
+RUN node_modules/.bin/esbuild src/server.ts \
+  --bundle \
+  --platform=node \
+  --target=node20 \
+  --format=esm \
+  --outfile=dist/server.mjs \
+  --packages=external
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "npx prisma migrate deploy; tsx src/server.ts"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.mjs"]
