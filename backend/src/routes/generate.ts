@@ -99,7 +99,7 @@ export async function generateRoutes(app: FastifyInstance) {
 
     try {
       // ── Step 3: Call Gamma API ───────────────────────────────────────────
-      const gammaResult = await generatePresentation(prompt, clampedCards);
+      const gammaResult = await generatePresentation(prompt, clampedCards, themeId);
 
       // ── Step 4: Get next version number ─────────────────────────────────
       const prevCount = await db.presentation.count({

@@ -21,7 +21,7 @@ export default function Home() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (themeId?: string | null) => {
     if (!prompt.trim() || state === "loading") return;
 
     setState("loading");
@@ -38,7 +38,7 @@ export default function Home() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: prompt.trim() }),
+        body: JSON.stringify({ prompt: prompt.trim(), themeId: themeId ?? undefined }),
       });
 
       const data: GenerateResponse & { error?: string } = await res.json();
@@ -106,7 +106,7 @@ export default function Home() {
           <InputBox
             value={prompt}
             onChange={setPrompt}
-            onSubmit={handleGenerate}
+            onSubmit={(themeId) => handleGenerate(themeId)}
             loading={state === "loading"}
           />
         </div>

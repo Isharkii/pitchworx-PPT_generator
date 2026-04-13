@@ -35,7 +35,7 @@ async function fetchGamma(path: string, options: RequestInit = {}) {
   return res.json();
 }
 
-async function createGeneration(prompt: string, numCards: number): Promise<string> {
+async function createGeneration(prompt: string, numCards: number, themeId?: string): Promise<string> {
   const data = await fetchGamma("/generations", {
     method: "POST",
     body: JSON.stringify({
@@ -44,6 +44,7 @@ async function createGeneration(prompt: string, numCards: number): Promise<strin
       format: "presentation",
       numCards,
       exportAs: "pptx",
+      ...(themeId && { themeId }),
     }),
   });
   return data.generationId as string;
@@ -76,8 +77,28 @@ async function pollGeneration(generationId: string): Promise<GammaResult> {
 
 export async function generatePresentation(
   prompt: string,
-  numCards = 8
+  numCards = 8,
+  themeId?: string
 ): Promise<GammaResult> {
-  const generationId = await createGeneration(prompt, numCards);
+  const generationId = await createGeneration(prompt, numCards, themeId);
   return pollGeneration(generationId);
+}
+
+// ── Themes ────────────────────────────────────────────────────────────────────
+
+export interface GammaTheme {
+  id: string;
+  name: string;
+  type: string;
+  colorKeywords: string[];
+  toneKeywords: string[];
+}
+
+export async function fetchGammaThemes(
+  limit = 50,
+  after?: string
+): Promise<{ data: GammaTheme[]; hasMore: boolean; nextCursor?: string }> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (after) params.set("after", after);
+  return fetchGamma(`/themes?${params}`);
 }

@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { db } from "../lib/db";
 import { cacheGet, cacheSet } from "../lib/redis";
+import { fetchGammaThemes, type GammaTheme } from "../lib/gamma";
 
 export async function themeRoutes(app: FastifyInstance) {
   // GET /themes — list all themes (cached 5 min)
@@ -19,6 +20,24 @@ export async function themeRoutes(app: FastifyInstance) {
     const theme = await db.theme.findUnique({ where: { id } });
     if (!theme) return reply.status(404).send({ error: "Theme not found" });
     return theme;
+  });
+
+  // GET /themes/gamma — fetch themes directly from Gamma API (cached 1 hour)
+  app.get("/themes/gamma", async (req, reply) => {
+    const { limit = "50", after } = req.query as { limit?: string; after?: string };
+
+    const cacheKey = `themes:gamma:${limit}:${after ?? "start"}`;
+    const cached = await cacheGet<unknown>(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const result = await fetchGammaThemes(Number(limit), after);
+      await cacheSet(cacheKey, result, 60 * 60); // cache 1 hour
+      return result;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to fetch Gamma themes";
+      return reply.status(502).send({ error: message });
+    }
   });
 
   // POST /themes — create a theme

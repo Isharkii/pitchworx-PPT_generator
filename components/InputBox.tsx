@@ -3,11 +3,12 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, X } from "lucide-react";
+import ThemePicker from "./ThemePicker";
 
 interface InputBoxProps {
   value: string;
   onChange: (val: string) => void;
-  onSubmit: () => void;
+  onSubmit: (themeId?: string | null) => void;
   loading: boolean;
 }
 
@@ -21,6 +22,7 @@ export default function InputBox({ value, onChange, onSubmit, loading }: InputBo
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<ImagePreview[]>([]);
+  const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
 
   useEffect(() => {
     const el = textareaRef.current;
@@ -32,7 +34,7 @@ export default function InputBox({ value, onChange, onSubmit, loading }: InputBo
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      if (!loading && value.trim()) onSubmit();
+      if (!loading && value.trim()) onSubmit(selectedTheme);
     }
   };
 
@@ -154,10 +156,11 @@ export default function InputBox({ value, onChange, onSubmit, loading }: InputBo
             <span className="text-xs text-gray-400 dark:text-white/20 select-none">
               ⌘ Enter to generate
             </span>
+            <ThemePicker selected={selectedTheme} onSelect={setSelectedTheme} />
           </div>
 
           <motion.button
-            onClick={onSubmit}
+            onClick={() => onSubmit(selectedTheme)}
             disabled={loading || !value.trim()}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
