@@ -66,6 +66,13 @@ export async function generateRoutes(app: FastifyInstance) {
 
     const clampedCards = Math.min(Math.max(numCards, 3), 20);
 
+    // ── Step 0: Ensure user row exists (upsert) ────────────────────────────
+    await db.user.upsert({
+      where: { id: userId },
+      update: {},
+      create: { id: userId, email: `${userId}@anonymous.local` },
+    });
+
     // ── Step 1: Resolve or create project ──────────────────────────────────
     let project;
     if (projectId) {
