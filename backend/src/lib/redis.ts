@@ -14,6 +14,12 @@ export const redis =
 
 if (process.env.NODE_ENV !== "production") globalForRedis.redis = redis;
 
+// Attempt connection on startup so misconfiguration is logged immediately
+// rather than silently failing on first cache operation.
+redis.connect().catch((err: Error) => {
+  console.warn("[redis] Could not connect — caching disabled:", err.message);
+});
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 const CACHE_TTL = 60 * 5; // 5 minutes default
