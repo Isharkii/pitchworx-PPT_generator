@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendUrl } from "@/app/lib/backend";
 
 // ─── Gamma API constants ──────────────────────────────────────────────────────
 const GAMMA_BASE_URL = "https://public-api.gamma.app/v1.0";
@@ -117,7 +118,7 @@ export async function POST(req: NextRequest) {
     const numCards = Math.min(Math.max(Number(body?.numCards) || 8, 3), 20);
 
     // ── Backend mode — proxy to Fastify if BACKEND_URL is set ─────────────────
-    const backendUrl = process.env.BACKEND_URL;
+    const backendUrl = getBackendUrl();
     if (backendUrl) {
       const res = await fetch(`${backendUrl}/api/generate`, {
         method: "POST",

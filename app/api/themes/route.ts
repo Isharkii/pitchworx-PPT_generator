@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendUrl } from "@/app/lib/backend";
 
 export interface GammaTheme {
   id: string;
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // ── Backend mode ────────────────────────────────────────────────────────────
-    const backendUrl = process.env.BACKEND_URL;
+    const backendUrl = getBackendUrl();
     if (backendUrl) {
       const params = new URLSearchParams({ limit });
       if (after) params.set("after", after);
