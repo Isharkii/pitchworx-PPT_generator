@@ -1,14 +1,10 @@
-# ── TESTING ONLY — Railway deployment config ──────────────────────────────────
-# Remove this file when switching to VPS. See deploy/vps/ for production config.
+# ── Railway deployment config ──────────────────────────────────────────────────
 
 [build]
-builder = "NIXPACKS"
-buildCommand = "npm install --prefer-offline && npx prisma generate"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "npx prisma migrate deploy; node dist/server.cjs"
-# healthcheckPath = "/health"   # temporarily disabled for debugging
-# healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
