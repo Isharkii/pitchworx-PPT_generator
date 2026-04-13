@@ -3,9 +3,9 @@ builder = "NIXPACKS"
 buildCommand = "npm install --prefer-offline && npx prisma generate"
 
 [deploy]
-startCommand = "npx prisma migrate deploy && node --import tsx/esm src/server.ts"
+startCommand = "npx tsx src/server.ts"
 healthcheckPath = "/health"
-healthcheckTimeout = 30
+healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 

@@ -1,9 +1,18 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import { execSync } from "child_process";
 import { userRoutes } from "./routes/users";
 import { projectRoutes } from "./routes/projects";
 import { themeRoutes } from "./routes/themes";
 import { generateRoutes } from "./routes/generate";
+
+// Run migrations before server starts so the healthcheck isn't blocked
+try {
+  execSync("npx prisma migrate deploy", { stdio: "inherit" });
+} catch (err) {
+  console.error("Migration failed — exiting:", err);
+  process.exit(1);
+}
 
 const app = Fastify({
   logger: {
