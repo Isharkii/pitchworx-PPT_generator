@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm ci && npx prisma generate"
+buildCommand = "npm install --prefer-offline && npx prisma generate"
 
 [deploy]
 startCommand = "npx prisma migrate deploy && node --import tsx/esm src/server.ts"
