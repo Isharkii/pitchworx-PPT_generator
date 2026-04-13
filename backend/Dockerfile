@@ -9,8 +9,8 @@ RUN npm ci
 
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client (includes linux-musl-openssl-3.0.x binary for Alpine)
+RUN npx prisma generate --no-hints
 
 # Compile TypeScript to CJS with esbuild
 RUN node_modules/.bin/esbuild src/server.ts \
