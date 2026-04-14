@@ -201,8 +201,8 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Slide cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Slide cards — single column scrollable showcase */}
+                  <div className="flex flex-col gap-5">
                     {slides.map((slide, i) => (
                       <SlideCard key={slide.slideNumber} slide={slide} index={i} />
                     ))}
