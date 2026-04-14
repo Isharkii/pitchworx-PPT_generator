@@ -19,6 +19,7 @@ export default function Home() {
   const [gammaUrl, setGammaUrl] = useState<string | null>(null);
   const [exportUrl, setExportUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const outputRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = async (themeId?: string | null) => {
@@ -48,6 +49,7 @@ export default function Home() {
       setSlides(data.slides);
       setGammaUrl(data.gammaUrl);
       setExportUrl(data.exportUrl);
+      setCurrentSlide(0);
       setState("done");
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
@@ -120,7 +122,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-4xl mt-14"
+              className="w-full max-w-2xl mt-10"
             >
               {state === "loading" && <Loader count={6} />}
 
@@ -140,82 +142,105 @@ export default function Home() {
                 </motion.div>
               )}
 
-              {state === "done" && (
+              {state === "done" && slides.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="space-y-6"
+                  className="space-y-4"
                 >
-                  {/* Result header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
-                    <div>
-                      <h2 className="text-gray-700 dark:text-white/80 text-sm">
-                        Presentation ready
-                      </h2>
-                      <p className="text-gray-400 dark:text-white/30 text-xs mt-0.5">
-                        {slides.length} slides · Calibri font
-                      </p>
-                    </div>
-
+                  {/* Header row */}
+                  <div className="flex items-center justify-between px-1">
+                    <p className="text-gray-400 dark:text-white/30 text-xs"
+                      style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}>
+                      Slide {currentSlide + 1} of {slides.length}
+                    </p>
                     <div className="flex gap-2">
                       {gammaUrl && (
-                        <a
-                          href={gammaUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="
-                            inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm
-                            bg-violet-50 border border-violet-200 text-violet-600
-                            dark:bg-violet-500/15 dark:border-violet-500/25 dark:text-violet-400
-                            hover:bg-violet-100 dark:hover:bg-violet-500/25
-                            transition-colors
-                          "
-                        >
-                          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href={gammaUrl} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-violet-50 border border-violet-200 text-violet-600 dark:bg-violet-500/15 dark:border-violet-500/25 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-500/25 transition-colors"
+                          style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}>
+                          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                           View on Gamma
                         </a>
                       )}
                       {exportUrl && (
-                        <a
-                          href={exportUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          download
-                          className="
-                            inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm
-                            bg-gray-100 border border-gray-200 text-gray-600
-                            dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-white/60
-                            hover:bg-gray-200 dark:hover:bg-white/[0.08]
-                            transition-colors
-                          "
-                        >
-                          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href={exportUrl} target="_blank" rel="noopener noreferrer" download
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-gray-100 border border-gray-200 text-gray-600 dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/[0.08] transition-colors"
+                          style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}>
+                          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                           </svg>
-                          Download PPTX
+                          Download
                         </a>
                       )}
                     </div>
                   </div>
 
-                  {/* Slide cards — single column scrollable showcase */}
-                  <div className="flex flex-col gap-5">
-                    {slides.map((slide, i) => (
-                      <SlideCard key={slide.slideNumber} slide={slide} index={i} />
-                    ))}
+                  {/* Single slide view — matches input box width */}
+                  <div className="relative w-full">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentSlide}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <SlideCard slide={slides[currentSlide]} index={currentSlide} />
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
 
-                  <div className="flex justify-center pt-4">
+                  {/* Prev / Next navigation */}
+                  <div className="flex items-center justify-between px-1">
                     <button
-                      onClick={() => {
-                        setPrompt("");
-                        setState("idle");
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
+                      onClick={() => setCurrentSlide((s) => Math.max(0, s - 1))}
+                      disabled={currentSlide === 0}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border border-black/[0.07] dark:border-white/[0.07] text-gray-500 dark:text-white/40 hover:bg-gray-50 dark:hover:bg-white/[0.04] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Prev
+                    </button>
+
+                    {/* Dot indicators */}
+                    <div className="flex gap-1.5">
+                      {slides.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setCurrentSlide(i)}
+                          className={`h-1.5 rounded-full transition-all duration-200 ${
+                            i === currentSlide
+                              ? "w-5 bg-violet-500"
+                              : "w-1.5 bg-gray-300 dark:bg-white/20 hover:bg-gray-400 dark:hover:bg-white/40"
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentSlide((s) => Math.min(slides.length - 1, s + 1))}
+                      disabled={currentSlide === slides.length - 1}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border border-black/[0.07] dark:border-white/[0.07] text-gray-500 dark:text-white/40 hover:bg-gray-50 dark:hover:bg-white/[0.04] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}
+                    >
+                      Next
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="flex justify-center pt-2">
+                    <button
+                      onClick={() => { setPrompt(""); setState("idle"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                       className="text-xs text-gray-400 dark:text-white/25 hover:text-gray-600 dark:hover:text-white/50 transition-colors underline underline-offset-2"
+                      style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}
                     >
                       Generate another
                     </button>

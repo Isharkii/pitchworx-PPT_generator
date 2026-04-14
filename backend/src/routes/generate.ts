@@ -83,7 +83,7 @@ export async function generateRoutes(app: FastifyInstance) {
         data: {
           userId,
           title: prompt.slice(0, 60),
-          themeId,
+          // themeId is a Gamma API ID — not stored as local DB FK
           status: "generating",
         },
       });
