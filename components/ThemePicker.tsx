@@ -77,41 +77,38 @@ export default function ThemePicker({ selected, onSelect }: ThemePickerProps) {
 
   return (
     <div className="relative">
-      {/* Trigger */}
+      {/* Trigger — compact icon button */}
       <motion.button
-        whileTap={{ scale: 0.97 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setOpen((v) => !v)}
+        title={selectedTheme ? selectedTheme.name : "Choose theme"}
         className="
-          flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs
+          flex items-center gap-1.5 h-8 px-2 rounded-lg
           border border-black/[0.08] dark:border-white/[0.08]
-          text-gray-500 dark:text-white/40
-          hover:bg-gray-50 dark:hover:bg-white/[0.05]
-          hover:text-gray-700 dark:hover:text-white/60
+          text-gray-400 dark:text-white/30
+          hover:bg-gray-100 dark:hover:bg-white/[0.07]
+          hover:text-violet-600 dark:hover:text-violet-400
+          hover:border-violet-300 dark:hover:border-violet-500/40
           transition-all duration-200
         "
-        style={{ fontFamily: '"Helvetica Neue", Helvetica, sans-serif', fontWeight: 500 }}
       >
         {selectedTheme && selectedColors ? (
           <>
-            <div className="flex gap-0.5">
+            <div className="flex gap-[2px]">
               {selectedColors.map((c, i) => (
-                <div key={i} className="h-2.5 w-2.5 rounded-[2px]" style={{ backgroundColor: c }} />
+                <div key={i} className="h-3 w-3 rounded-[2px]" style={{ backgroundColor: c }} />
               ))}
             </div>
-            <span>{selectedTheme.name}</span>
             <span
               onClick={(e) => { e.stopPropagation(); onSelect(null); }}
-              className="ml-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-white/60"
+              className="text-[10px] text-gray-400 hover:text-gray-600 dark:hover:text-white/60 leading-none"
             >×</span>
           </>
         ) : (
-          <>
-            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-            </svg>
-            Theme
-          </>
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+          </svg>
         )}
       </motion.button>
 
